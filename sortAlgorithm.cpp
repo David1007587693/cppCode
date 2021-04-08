@@ -1,7 +1,7 @@
 #include<iostream>
 using namespace std;
 
-//快速排序
+//1.交换排序_快速排序
 void quickSort(int left, int right, int nums[]){
     if(left >= right) return;
     int i = left, j = right, base = nums[left], tmp;
@@ -22,7 +22,7 @@ void quickSort(int left, int right, int nums[]){
     quickSort(left, j - 1, nums);
     quickSort(j + 1, right, nums);
 }
-//冒泡排序
+//2.交换排序_冒泡排序
 void bubbleSort(int size, int nums[]){
     for(int i = 0; i < size - 1; i++){
         for(int j = 0; j < size - 1 - i; j++){
@@ -35,6 +35,7 @@ void bubbleSort(int size, int nums[]){
     }
 }
 
+//3.归并
 void Merge(int left, int mid, int right, int nums[]){
     int i = left, j = mid + 1, k = 0;
     int *tmp = new int[right - left + 1];
@@ -60,7 +61,7 @@ void Merge(int left, int mid, int right, int nums[]){
     delete []tmp;
 }
 
-//基于递归的归并排序（自顶向上）
+//3.基于递归的归并排序（自顶向上）
 void MergeSort1(int left, int right, int nums[]){
     if(left >= right) return;
     int mid = (right + left) / 2;
@@ -69,7 +70,7 @@ void MergeSort1(int left, int right, int nums[]){
     Merge(left, mid, right, nums);
 }
 
-//基于循环的归并排序（自底向上）
+//3.基于循环的归并排序（自底向上）
 void MergeSort2(int size, int nums[]){
     for(int i = 1; i < size; i *= 2){
         for(int low = 0; low + i < size; low += 2 * i){
@@ -82,7 +83,7 @@ void MergeSort2(int size, int nums[]){
     }
 }
 
-//直接插入排序
+//4.插入排序_直接插入排序
 void InsertionSort(int size, int nums[]){
     for(int i = 1; i < size; ++i){
         int val = nums[i];
@@ -96,10 +97,75 @@ void InsertionSort(int size, int nums[]){
     }
 }
 
-//希尔排序
+//5.插入排序_希尔排序
+void ShellSort(int size, int nums[]){
+    int d, tmp, j;
+    d = size / 2;
+    while (d > 0)
+    {
+        for(int i = d; i < size; ++i){
+            tmp = nums[i];
+            j = i - d;
+            while (j >= 0 && tmp <nums[j])
+            {
+                nums[j + d] = nums[j];
+                j = j - d;
+            }
+            nums[j + d] = tmp;
+        }
+        d = d / 2;  //缩小增量
+    }
+}
 
+//6.选择排序
+void SelectSort(int n, int size, int nums[]){
+    for(int i = 0; i < size; ++i){
+        int index = i;
+        for(int j = i + 1; j < size; j++)
+            if(nums[j] < nums[index])
+                index = j;
+        int tmp = nums[index];
+        nums[index] = nums[i];
+        nums[i] = tmp;
+    }
+    cout << endl;
+}
 
+//7.堆排序
+//构造大顶堆
+void maxHeap(int n, int size, int nums[]){
+    int left, right, maxV;
+    left = 2 * n;
+    right = 2 * n + 1;
+    if(left <= size && nums[left - 1] > nums[n - 1])
+        maxV = left;
+    else
+        maxV = n;
+    if(right <= size && nums[right - 1] > nums[maxV - 1])
+        maxV = right;
+    if(maxV != n){
+        swap(nums[n - 1], nums[maxV - 1]);
+        maxHeap(maxV, size, nums);
 
+    }
+}
+
+//构造大顶堆
+void buildMaxHeap(int size, int nums[]){
+    for(int i = size / 2; i > 0; i--)
+        maxHeap(i, size, nums);
+}
+
+void HeapSort(int size, int nums[]){
+    buildMaxHeap(size, nums);
+    for(int i = size; i > 1; i--){
+        swap(nums[0], nums[i - 1]);
+        size--;
+        maxHeap(1, size, nums);
+    }
+}
+
+//数组显示
 void printArr(int nums[], int size){
     for(int i = 0; i < size; ++i){
         cout << nums[i] << " ";
@@ -108,7 +174,7 @@ void printArr(int nums[], int size){
 }
 
 int main(){
-    int nums[] = {2,5,7,8,1,3,4,10,9};
+    int nums[] = {2,5,7,8,1,6,3,4,10,9};
     int size = sizeof(nums) / sizeof(nums[0]);
     printArr(nums, size);
 
@@ -117,7 +183,10 @@ int main(){
     //bubbleSort(size, nums);
     //MergeSort1(0, size - 1, nums);
     //MergeSort2(size, nums);
-    InsertionSort(size, nums);
+    //InsertionSort(size, nums);
+    //ShellSort(size, nums);
+    //SelectSort(size, nums);
+    HeapSort(size, nums);
     printArr(nums, size);
     return 0;
 }
