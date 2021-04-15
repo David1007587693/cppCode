@@ -37,7 +37,7 @@ void signal_fun(int signo){
 }
 
 int main(void){
-    char buf[100] = {0};
+    
     int fd1 = -1, fd2 = -1;
     //对管道fd1读，对管道fd2写
     fd1 = create_open_fifo(FIFO_NAME1, O_RDONLY);
@@ -57,6 +57,7 @@ int main(void){
         signal(SIGINT, signal_fun);
         while (1)
         {
+            char buf[100] = {0};
             bzero(buf, sizeof(buf));
             read(fd1, buf, sizeof(buf));
             printf("fifoTest3 child recv: %s\n", buf);
